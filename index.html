@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reading Comprehension Exercise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .instructions {
+            color: blue;
+            margin-bottom: 20px;
+        }
+        .feedback {
+            margin-top: 10px;
+            font-weight: bold; /* Make it bold */
+            color: blue;      /* Set the text color to blue */
+        }
+        .passage h3 {
+            font-weight: bold; /* Make it bold */
+            color: blue;      /* Set the text color to blue */
+        }
+        .hidden {
+            display: none;
+        }
+        .passage {
+            margin-bottom: 20px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: darkgreen;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Reading Comprehension Exercise</h1>
+<p class="instructions">Instructions: Read the passage carefully. Answer the questions that follow by selecting the correct option. You will be shown one question at a time. After answering, you will know if you got it right or wrong. If you answer incorrectly, try again! Good luck!</p>
+
+<div id="passage" class="passage"></div>
+<div id="question-container" class="hidden">
+    <h3>Question</h3>
+    <div id="question"></div>
+    <div id="options"></div>
+    <div class="feedback" id="feedback"></div>
+</div>
+
+<button id="next-exercise" class="hidden">Next Exercise</button>
+<button id="more-lessons" class="hidden" onclick="window.location.href='https://sites.google.com/view/grades-2/home'">More Lessons</button>
+
+<script>
+    const exercises = [
+        {
+            passage: "COMPREHENSION 1: The sun is a star at the center of our solar system. It is composed mainly of hydrogen and helium and provides light and warmth to the Earth. Without the sun, life as we know it would not exist.",
+            questions: [
+                {
+                    question: "What is the sun primarily made of?",
+                    options: ["Oxygen", "Hydrogen and Helium"],
+                    correct: "Hydrogen and Helium"
+                },
+                {
+                    question: "Where is the sun located?",
+                    options: ["In the Milky Way", "At the center of the solar system"],
+                    correct: "At the center of the solar system"
+                }
+            ]
+        },
+        {
+            passage: "COMPREHENSION 2: The tiger is the largest species of cat and is known for its power and strength. Tigers are solitary animals and are mostly found in Asia. They have distinctive orange coats with black stripes.",
+            questions: [
+                {
+                    question: "Where are tigers mainly found?",
+                    options: ["Africa", "Asia"],
+                    correct: "Asia"
+                },
+                {
+                    question: "What color are tigers known for?",
+                    options: ["Black and white", "Orange with black stripes"],
+                    correct: "Orange with black stripes"
+                }
+            ]
+        },
+        {
+            passage: "COMPREHENSION 3: Butterflies are insects in the order Lepidoptera. They undergo a four-stage life cycle: egg, larva, pupa, and adult. Butterflies are known for their colorful wings.",
+            questions: [
+                {
+                    question: "What do butterflies undergo in their life cycle?",
+                    options: ["Two stages", "Four stages"],
+                    correct: "Four stages"
+                },
+                {
+                    question: "What are butterflies known for?",
+                    options: ["Colorful wings", "No wings"],
+                    correct: "Colorful wings"
+                }
+            ]
+        },
+        {
+            passage: "COMPREHENSION 4: Trees are vital to our ecosystem. They provide oxygen, improve air quality, conserve water, and support wildlife. Some trees can live for hundreds or even thousands of years.",
+            questions: [
+                {
+                    question: "What do trees provide for us?",
+                    options: ["Oxygen", "Plastic"],
+                    correct: "Oxygen"
+                },
+                {
+                    question: "How long can some trees live?",
+                    options: ["Only a few years", "Hundreds or thousands of years"],
+                    correct: "Hundreds or thousands of years"
+                }
+            ]
+        },
+        {
+            passage: "COMPREHENSION 5: Penguins are flightless birds that live in the Southern Hemisphere. They are known for their black and white feathers and their ability to swim. Penguins eat fish and other sea creatures.",
+            questions: [
+                {
+                    question: "Where do penguins primarily live?",
+                    options: ["Northern Hemisphere", "Southern Hemisphere"],
+                    correct: "Southern Hemisphere"
+                },
+                {
+                    question: "What do penguins eat?",
+                    options: ["Grass", "Fish"],
+                    correct: "Fish"
+                }
+            ]
+        }
+    ];
+
+    let currentExercise = 0;
+    let currentQuestion = 0;
+
+    function displayExercise() {
+        const exercise = exercises[currentExercise];
+        document.getElementById('passage').textContent = exercise.passage;
+        document.getElementById('question-container').classList.remove('hidden');
+        displayQuestion();
+    }
+
+    function displayQuestion() {
+        const exercise = exercises[currentExercise];
+        const question = exercise.questions[currentQuestion];
+
+        document.getElementById('question').textContent = question.question;
+        const optionsContainer = document.getElementById('options');
+        optionsContainer.innerHTML = '';
+        question.options.forEach(option => {
+            optionsContainer.innerHTML += `
+                <label>
+                    <input type="radio" name="options" value="${option}">${option}
+                </label><br>`;
+        });
+
+        document.getElementById('feedback').textContent = '';
+    }
+
+    function checkAnswer() {
+        const selectedOption = document.querySelector('input[name="options"]:checked');
+        const exercise = exercises[currentExercise];
+        const question = exercise.questions[currentQuestion];
+
+        if (selectedOption) {
+            if (selectedOption.value === question.correct) {
+                document.getElementById('feedback').textContent = 'Correct! You can move to the next question.';
+                currentQuestion++;
+                
+                if (currentQuestion < exercise.questions.length) {
+                    setTimeout(() => {
+                        displayQuestion();
+                    }, 2000); // Wait for 2 seconds before displaying the next question
+                } else {
+                    document.getElementById('next-exercise').classList.remove('hidden');
+                    document.getElementById('question-container').classList.add('hidden');
+                    document.getElementById('feedback').textContent = 'Exercise complete! Click "Next Exercise" to continue.';
+                }
+            } else {
+                document.getElementById('feedback').textContent = 'Incorrect. Please try again.';
+            }
+        }
+    }
+
+    document.getElementById('next-exercise').addEventListener('click', () => {
+        currentExercise++;
+        currentQuestion = 0; // Reset question index
+        if (currentExercise < exercises.length) {
+            displayExercise();
+        } else {
+            document.getElementById('more-lessons').classList.remove('hidden');
+            document.getElementById('next-exercise').classList.add('hidden');
+            document.getElementById('passage').textContent = '';
+            document.getElementById('question-container').classList.add('hidden');
+        }
+    });
+
+    document.getElementById('options').addEventListener('change', checkAnswer);
+
+    // Start the first exercise
+    displayExercise();
+</script>
+
+</body>
+</html>
+
+
+
